@@ -5,6 +5,9 @@ import {
   listAllRecipes,
   listRecipesByAuthor,
   listRecipesByTag,
+  getRecipeById,
+  updateRecipe,
+  deleteRecipe,
 } from '../src/services/recipes.js'
 import { Recipe } from '../src/db/models/recipe.js'
 
@@ -123,8 +126,70 @@ describe('Listing recipes', () => {
   }) // end
 
   //Sould be able to filter recipes by the author =============================
-  test('Sould be able to filter recipes by the author', async () => {
+  test('Should be able to filter recipes by the author', async () => {
     const recipes = await listRecipesByAuthor('Matthew Heino')
     expect(recipes.length).toBe(1)
+  }) // end
+
+  // Tests for getting a single recipe ==========================================
+  describe('Getting a post', () => {
+    test('Should return the full recipe', async () => {
+      const recipe = await getRecipeById(createdSampleRecipes[0]._id)
+      expect(recipe.toObject()).toEqual(createdSampleRecipes[0].toObject())
+    })
+    test('Should fail if the id does not exist', async () => {
+      const recipe = await getRecipeById('000000000000000000000000')
+      expect(recipe).toEqual(null)
+    })
+  }) // end
+
+  // Tests for updating a recipe ================================================
+  describe('Updating recipes', () => {
+    test('Should update the specified property', async () => {
+      await updateRecipe(createdSampleRecipes[0]._id, {
+        ingredientList: 'Updated ingredient list',
+      })
+      const updatedRecipe = await Recipe.findById(createdSampleRecipes[0]._id)
+      expect(updatedRecipe.ingredientList).toEqual('Updated ingredient list')
+    })
+
+    test('should not update other properties', async () => {
+      await updateRecipe(createdSampleRecipes[0]._id, {
+        ingredientList: 'Updated ingredient list',
+      })
+      const updatedRecipe = await Recipe.findById(createdSampleRecipes[0]._id)
+      expect(updatedRecipe.title).toEqual('Sample Recipe 1')
+    })
+    test('should update the updatedAt timestamp', async () => {
+      await updateRecipe(createdSampleRecipes[0]._id, {
+        ingredientList: 'Updated ingredient list',
+      })
+      const updatedRecipe = await Recipe.findById(createdSampleRecipes[0]._id)
+      expect(updatedRecipe.updatedAt.getTime()).toBeGreaterThan(
+        createdSampleRecipes[0].updatedAt.getTime(),
+      )
+    })
+    test('should fail if the id does not exist', async () => {
+      const recipe = await updateRecipe('000000000000000000000000', {
+        ingredientList: 'Updated ingredient list',
+      })
+      expect(recipe).toEqual(null)
+    })
+  })
+
+  // Tests for deleting a recipe ================================================
+  describe('Deleting recipe', () => {
+    test('Should remove the recipe from the database', async () => {
+      const result = await deleteRecipe(createdSampleRecipes[0]._id)
+      expect(result.deletedCount).toEqual(1)
+
+      const deletedRecipe = await Recipe.findById(createdSampleRecipes[0]._id)
+      expect(deletedRecipe).toEqual(null)
+    })
+
+    test('Should fail if the id does not exist', async () => {
+      const result = await deleteRecipe('000000000000000000000000')
+      expect(result.deletedCount).toEqual(0)
+    })
   })
 })

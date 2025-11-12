@@ -36,3 +36,26 @@ export async function listRecipesByAuthor(author, options) {
 export async function listRecipesByTag(tags, options) {
   return await listRecipes({ tags }, options)
 }
+
+// Get the recipe by the recipe ID ============================================
+// Will use the Mongoose feature (findById)to find the recipe by the ID =======
+export async function getRecipeById(recipeId) {
+  return await Recipe.findById(recipeId)
+}
+
+// Update the recipe given a recipe ID ========================================
+export async function updateRecipe(
+  recipeId,
+  { title, author, ingredientList, imageURL, tags },
+) {
+  return await Recipe.findOneAndUpdate(
+    { _id: recipeId },
+    { $set: { title, author, ingredientList, imageURL, tags } },
+    { new: true },
+  )
+}
+
+// Delete a post given a recipe ID ============================================
+export async function deleteRecipe(recipeId) {
+  return await Recipe.deleteOne({ _id: recipeId })
+}
