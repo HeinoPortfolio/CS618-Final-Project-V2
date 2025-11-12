@@ -1,0 +1,5 @@
+-- General Notes About The Project
+
+-- Environment Variables 
+
+-- Other
