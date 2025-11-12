@@ -1,7 +1,11 @@
 import { app } from './app.js'
+import dotenv from 'dotenv'
 
-// Port for the database =================
-const PORT = 3000
+// function to setup the environment variables ============
+dotenv.config()
+
+// Port for the database ==================================
+const PORT = process.env.PORT
 
 app.listen(PORT)
 

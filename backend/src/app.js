@@ -2,7 +2,7 @@ import express from 'express'
 
 const app = express()
 
-// Configurethe server simply =======
+// Configure the server simply ============================
 app.get('/', (req, res) => {
   res.send('Express is currently running!')
 })
