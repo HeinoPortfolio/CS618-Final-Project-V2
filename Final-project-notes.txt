@@ -1,4 +1,9 @@
 -- General Notes About The Project
+    -- Changed the name of src/App.jsx to Blog.jsx
+    -- Created a new src/App.jsx 
+        -- used to import tools like tanstack, the query client and 
+        the query provider 
+    --
 
 -- Environment Variables:
     -- DATABASE_URL = mongodb://localhost:27017/recipe-blog-v2

@@ -1,39 +1,23 @@
-import { RecipeList } from './components/RecipeList.jsx'
-import { CreateRecipe } from './components/CreateRecipe.jsx'
-import { RecipeFilter } from './components/RecipeFilter.jsx'
-import { RecipeSorting } from './components/RecipeSorting.jsx'
+/* 
+    File Purpose:
+    -- To import the query client and the provider from tanstack
+    -- Will import the Blog application 
+    -- Creates a new query client to return information in the database
+    -- Application will return the application wrapping the orignal application
 
-// Create some test recipes =============================================
-const recipes = [
-  {
-    title: 'This is a test recipe title',
-    ingredientList: 'Some ingredients go here. \nSome others go here.',
-    author: 'Matthew Heino',
-    imageURL:
-      'https://github.com/HeinoPortfolio/images/blob/main/peach-cobbler.jpg?raw=false',
-  },
+*/
 
-  {
-    title: 'This is another test recipe title',
-    ingredientList: 'Some other ingredients go here. \nMore go here.',
-    author: 'Claudia Heino',
-    imageURL:
-      'https://github.com/HeinoPortfolio/images/blob/main/peach-cobbler.jpg?raw=false',
-  },
-]
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Blog } from './Blog.jsx'
 
+// Create a new query client to call the backend ==============================
+const queryClient = new QueryClient()
+
+// The application function ===========
 export function App() {
   return (
-    <div style={{ padding: 8 }}>
-      <CreateRecipe />
-      <br />
-      <hr />
-      <b>Filter by:</b>
-      <RecipeFilter field='author' />
-      <br />
-      <RecipeSorting fields={['createdAt', 'updatedAt']} />
-      <hr />
-      <RecipeList recipes={recipes} />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <Blog />
+    </QueryClientProvider>
   )
 }
