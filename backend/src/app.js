@@ -4,6 +4,7 @@ import cors from 'cors'
 
 // Import the routes =====
 import { recipesRoutes } from './routes/recipes.js'
+import { userRoutes } from './routes/users.js'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(cors())
 
 // Call the routes functions ==============================
 recipesRoutes(app)
+userRoutes(app)
 
 // Configure the server simply ============================
 app.get('/', (req, res) => {
