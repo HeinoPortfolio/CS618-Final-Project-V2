@@ -1,16 +1,23 @@
 import PropTypes from 'prop-types'
 
 // Recipe filter component ====================================================
-export function RecipeFilter({ field }) {
+export function RecipeFilter({ field, value, onChange }) {
   return (
     <div>
       <label htmlFor={`filter-${field}`}> {field}: </label>
-
-      <input type='text' name={`filter-${field}`} id={`filter-${field}`} />
+      <input
+        type='text'
+        name={`filter-${field}`}
+        id={`filter-${field}`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </div>
   )
 }
 
 RecipeFilter.propTypes = {
   field: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 }
