@@ -10,3 +10,20 @@
     -- VITE_BACKEND_URL="http://localhost:3000/api/v1"
 
 -- Other
+
+-- Useful Scripts
+----- To create/login a user from DevTools:
+
+const res = await fetch('http://localhost:3000/api/v1/user/signup', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ username: 'archie', password: 'dog' }),})
+
+---- to login a user in DevTools:
+
+const res = await fetch('http://localhost:3000/api/v1/user/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ username: 'mheino', password: 'archie' }),
+})
+
