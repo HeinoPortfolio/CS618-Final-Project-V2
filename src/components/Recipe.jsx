@@ -18,17 +18,15 @@ export function Recipe({ title, author, ingredientList, imageURL }) {
       <div>
         <pre>{ingredientList}</pre>
       </div>
-
+      <div>
+        <img src={imageURL} width='200' height='150' alt={title} />
+      </div>
       {author && (
         <em>
           <br />
           Written by: <strong>{author}</strong>
         </em>
       )}
-
-      <div>
-        <img src={imageURL} alt='' />
-      </div>
     </article>
   )
 } // end Recipe
