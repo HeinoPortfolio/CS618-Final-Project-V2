@@ -3,7 +3,7 @@
     -- To import the query client and the provider from tanstack
     -- Will import the Blog application 
     -- Creates a new query client to return information in the database
-    -- Application will return the application wrapping the orignal application
+    -- Application will return the application wrapping the original application
 */
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Blog } from './Blog.jsx'
