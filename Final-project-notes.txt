@@ -3,7 +3,10 @@
     -- Created a new src/App.jsx 
         -- used to import tools like tanstack, the query client and 
         the query provider 
-    --
+    -- In module 6 created a 'pages' folder and moved or created the 
+       following files:
+       -- Blog.jsx (moved)
+       -- 
 
 -- Environment Variables:
     -- DATABASE_URL=mongodb://localhost:27017/recipe-blog-v2

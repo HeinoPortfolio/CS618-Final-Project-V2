@@ -1,11 +1,12 @@
-import { RecipeList } from './components/RecipeList.jsx'
-import { CreateRecipe } from './components/CreateRecipe.jsx'
-import { RecipeFilter } from './components/RecipeFilter.jsx'
-import { RecipeSorting } from './components/RecipeSorting.jsx'
+import { RecipeList } from '../components/RecipeList.jsx'
+import { CreateRecipe } from '../components/CreateRecipe.jsx'
+import { RecipeFilter } from '../components/RecipeFilter.jsx'
+import { RecipeSorting } from '../components/RecipeSorting.jsx'
 import { useQuery } from '@tanstack/react-query'
-import { getRecipes } from './api/recipes.js'
-
+import { getRecipes } from '../api/recipes.js'
 import { useState } from 'react'
+
+import { Header } from '../components/Header.jsx'
 
 export function Blog() {
   // Use states of the BLog application ===================
@@ -33,7 +34,8 @@ export function Blog() {
   const recipes = recipesQuery.data ?? []
 
   return (
-    <div style={{ padding: 8 }}>
+    <div style={{ padding: 10 }}>
+      <Header />
       <CreateRecipe />
       <br />
       <hr />
