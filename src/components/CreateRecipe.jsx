@@ -2,19 +2,23 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createRecipe } from '../api/recipes.js'
 
+import { useAuth } from '../contexts/AuthContext.jsx'
+
 export function CreateRecipe() {
   // Create the states=========================================================
   const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
   const [ingredientList, setIngredientList] = useState('')
   const [imageURL, setImageURL] = useState('')
+
+  // Get the authentication context ===========================================
+  const [token] = useAuth()
 
   // Create the query client ==================================================
   const queryClient = useQueryClient()
 
   // Create the recipe mutation for creating the new recipe ===================
   const createRecipeMutation = useMutation({
-    mutationFn: () => createRecipe({ title, author, ingredientList, imageURL }),
+    mutationFn: () => createRecipe(token, { title, ingredientList, imageURL }),
     onSuccess: () => queryClient.invalidateQueries(['recipes']),
   })
 
@@ -23,6 +27,9 @@ export function CreateRecipe() {
     e.preventDefault()
     createRecipeMutation.mutate()
   }
+
+  // If there is no token ask to create an account
+  if (!token) return <div>Please login to create a new recipe.</div>
 
   // Form for creating the new recipe =========================================
   return (
@@ -40,19 +47,6 @@ export function CreateRecipe() {
         />
       </div>
       <br />
-      <div>
-        <label htmlFor='create-author'>
-          {' '}
-          <b>Author: </b>
-        </label>
-        <input
-          type='text'
-          name='create-author'
-          id='create-author'
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-      </div>
       <br />
       <div>
         <label htmlFor='create-imageURL'>
