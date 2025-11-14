@@ -8,7 +8,10 @@ import {
   deleteRecipe,
 } from '../services/recipes.js'
 
-// Function to send the routes for the recipes ============
+// Importation of the authentication middleware ===============================
+import { requireAuth } from '../middleware/jwt.js'
+
+// Function to send the routes for the recipes ================================
 export function recipesRoutes(app) {
   app.get('/api/v1/recipes', async (req, res) => {
     const { sortBy, sortOrder, author, tags } = req.query
@@ -43,10 +46,10 @@ export function recipesRoutes(app) {
     }
   }) // end get recipe by ID
 
-  // Create a recipe ============================================================
-  app.post('/api/v1/recipes', async (req, res) => {
+  // Create a recipe ==========================================================
+  app.post('/api/v1/recipes', requireAuth, async (req, res) => {
     try {
-      const recipe = await createRecipe(req.body)
+      const recipe = await createRecipe(req.auth.sub, req.body)
       return res.json(recipe)
     } catch (err) {
       console.error('Error creating post', err)
@@ -55,9 +58,9 @@ export function recipesRoutes(app) {
   }) // end create recipe
 
   //  Update a recipe =========================================================
-  app.patch('/api/v1/recipes/:id', async (req, res) => {
+  app.patch('/api/v1/recipes/:id', requireAuth, async (req, res) => {
     try {
-      const recipe = await updateRecipe(req.params.id, req.body)
+      const recipe = await updateRecipe(req.auth.sub, req.params.id, req.body)
       return res.json(recipe)
     } catch (err) {
       console.error('Error updating recipe', err)
@@ -66,9 +69,9 @@ export function recipesRoutes(app) {
   }) // end update recipe
 
   // Delete a recipe by recipe ID ==============================================
-  app.delete('/api/v1/recipes/:id', async (req, res) => {
+  app.delete('/api/v1/recipes/:id', requireAuth, async (req, res) => {
     try {
-      const { deletedCount } = await deleteRecipe(req.params.id)
+      const { deletedCount } = await deleteRecipe(req.auth.sub, req.params.id)
       if (deletedCount === 0) return res.sendStatus(404)
       return res.status(204).end()
     } catch (err) {

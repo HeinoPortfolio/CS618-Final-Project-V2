@@ -1,13 +1,11 @@
 import { Recipe } from '../db/models/recipe.js'
 
 // Create a recipe service function ===========================================
-export async function createRecipe({
-  title,
-  author,
-  ingredientList,
-  imageURL,
-}) {
-  const recipe = new Recipe({ title, author, ingredientList, imageURL })
+export async function createRecipe(
+  userId,
+  { title, ingredientList, imageURL },
+) {
+  const recipe = new Recipe({ title, author: userId, ingredientList, imageURL })
   return await recipe.save()
 } // End create recipe
 
@@ -46,16 +44,17 @@ export async function getRecipeById(recipeId) {
 // Update the recipe given a recipe ID ========================================
 export async function updateRecipe(
   recipeId,
-  { title, author, ingredientList, imageURL, tags },
+  userId,
+  { title, ingredientList, imageURL, tags },
 ) {
   return await Recipe.findOneAndUpdate(
-    { _id: recipeId },
-    { $set: { title, author, ingredientList, imageURL, tags } },
+    { _id: recipeId, author: userId },
+    { $set: { title, ingredientList, imageURL, tags } },
     { new: true },
   )
 }
 
 // Delete a post given a recipe ID ============================================
-export async function deleteRecipe(recipeId) {
-  return await Recipe.deleteOne({ _id: recipeId })
+export async function deleteRecipe(userId, recipeId) {
+  return await Recipe.deleteOne({ _id: recipeId, author: userId })
 }

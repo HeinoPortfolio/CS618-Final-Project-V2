@@ -44,6 +44,8 @@ export function Blog() {
         onChange={(value) => setAuthor(value)}
       />
       <br />
+      <hr />
+
       <RecipeSorting
         fields={['createdAt', 'updatedAt']}
         value={sortBy}
@@ -52,7 +54,18 @@ export function Blog() {
         onOrderChange={(orderValue) => setSortOrder(orderValue)}
       />
       <hr />
-      <RecipeList recipes={recipes} />
+      <div
+        style={{
+          maxHeight: '600px',
+          maxWidth: '800px',
+          overflowY: 'scroll',
+          overflowX: 'scroll',
+          border: '3px solid #ccc',
+          padding: '50px',
+        }}
+      >
+        <RecipeList recipes={recipes} />
+      </div>
     </div>
   )
 }
