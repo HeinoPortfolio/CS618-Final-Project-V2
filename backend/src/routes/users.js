@@ -1,7 +1,5 @@
-import {
-  createUser,
-  loginUser /*getUserInfoById ,*/,
-} from '../services/users.js'
+import { createUser, loginUser, getUserInfoById } from '../services/users.js'
+
 // Route for creating a user ================================================
 export function userRoutes(app) {
   app.post('/api/v1/user/signup', async (req, res) => {
@@ -13,6 +11,13 @@ export function userRoutes(app) {
         error: 'Failed to create the user, does the username already exist?',
       })
     }
+  })
+
+  // Route to get user information by ID ======================================
+  app.get('/api/v1/users/:id', async (req, res) => {
+    const userInfo = await getUserInfoById(req.params.id)
+
+    return res.status(200).send(userInfo)
   })
 
   // Route for logging in a user ============================================

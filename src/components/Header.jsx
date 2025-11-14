@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 import { useAuth } from '../contexts/AuthContext'
 
+import { User } from './User.jsx'
+
 // Header to show the links for signup ==========
 export function Header() {
   // Authentication states ========================================
@@ -14,7 +16,11 @@ export function Header() {
         <h1>Welcome To The Recipe Blog! </h1>
         <br />
         <b>
-          Logged in as:&nbsp; <b>{sub}</b>
+          Logged in as:&nbsp;{' '}
+          <b>
+            {' '}
+            <User id={sub} />{' '}
+          </b>
         </b>
         <br />
         <br />

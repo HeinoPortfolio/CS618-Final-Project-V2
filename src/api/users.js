@@ -9,6 +9,15 @@ export const signup = async ({ username, password }) => {
   return await res.json()
 }
 
+export const getUserInfo = async (id) => {
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/${id}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  return await res.json()
+} // get user info
+
 // API function for user login ================================================
 export const login = async ({ username, password }) => {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/login`, {

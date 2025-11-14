@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { User } from './User.jsx'
 
 // Recipe component ===========================================================
 /*  
@@ -10,7 +11,7 @@ import PropTypes from 'prop-types'
         line (\n) character
 
 */
-export function Recipe({ title, author, ingredientList, imageURL }) {
+export function Recipe({ title, author: userId, ingredientList, imageURL }) {
   return (
     <article>
       <h3>{title}</h3>
@@ -21,10 +22,13 @@ export function Recipe({ title, author, ingredientList, imageURL }) {
       <div>
         <img src={imageURL} width='200' height='150' alt={title} />
       </div>
-      {author && (
+      {userId && (
         <em>
           <br />
-          Written by: <strong>{author}</strong>
+          Written by:{' '}
+          <strong>
+            <User id={userId} />
+          </strong>
         </em>
       )}
     </article>
