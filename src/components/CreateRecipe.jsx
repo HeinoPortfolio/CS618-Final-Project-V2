@@ -17,15 +17,21 @@ export function CreateRecipe() {
   const queryClient = useQueryClient()
 
   // Create the recipe mutation for creating the new recipe ===================
+  // Can remove "data" and the console output if there are problems
+
   const createRecipeMutation = useMutation({
     mutationFn: () => createRecipe(token, { title, ingredientList, imageURL }),
-    onSuccess: () => queryClient.invalidateQueries(['recipes']),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['recipes']),
+        console.log('User data:', data._id)
+    },
   })
 
   // Handle the click to create a new recipe button ===========================
   const handleSubmit = (e) => {
     e.preventDefault()
     createRecipeMutation.mutate()
+    //console.log(newRecipe)
   }
 
   // If there is no token ask to create an account
