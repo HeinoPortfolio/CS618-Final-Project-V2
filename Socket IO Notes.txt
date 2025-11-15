@@ -12,4 +12,4 @@ General Notes:
 -- Change the frontend "env" variable:
     -- VITE_SOCKET_HOST="localhost:3000"
     -- omit http need just the name of the server
---
+-- Moved socket connection to a separate file:  backend/src/socket.js

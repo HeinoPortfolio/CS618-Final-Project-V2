@@ -1,14 +1,14 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-
-// Import the routes =====
+// Import the routes =====================================
 import { recipesRoutes } from './routes/recipes.js'
 import { userRoutes } from './routes/users.js'
-
 // Imports for the node server and socket.io =============
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
+// Import the socket handler =============================
+import { handleSocket } from './socket.js'
 
 const app = express()
 
@@ -39,22 +39,10 @@ const io = new Server(server, {
   },
 })
 
-// Setup a connection event  ==================================================
-/*
-    Note:
-    -- When thes is a connection event will log a message to the console
-    -- Will display the socket ID **NOT** the user that is connected
-    -- will add a socket layer around the Node server
-     
-*/
-io.on('connection', (socket) => {
-  console.log('User connected:', socket.id)
+// Handle the socket event  ==============================
+handleSocket(io)
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id)
-  })
-})
-// End socket addition ====================================
+// Socket.io code ends here ===============================
 
 // Configure the server simply ============================
 app.get('/', (req, res) => {
