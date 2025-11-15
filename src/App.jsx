@@ -22,6 +22,12 @@ const queryClient = new QueryClient()
 // Provide the token ==========================================================
 import { AuthContextProvider } from './contexts/AuthContext.jsx'
 
+// Import for socke.io client =================================================
+import { io } from 'socket.io-client'
+
+// Create a socket ============================================================
+const socket = io(import.meta.env.VITE_SOCKET_HOST)
+
 // Create a router variable ===================================================
 const router = createBrowserRouter([
   {
@@ -37,6 +43,15 @@ const router = createBrowserRouter([
     element: <Login />,
   },
 ])
+
+// Event handlers =============================================================
+socket.on('connect', () => {
+  console.log('connected to socket.io as', socket.id)
+})
+
+socket.on('connect_error', (err) => {
+  console.error('socket.io connect error:', err)
+})
 
 // The application function ===========
 export function App() {
