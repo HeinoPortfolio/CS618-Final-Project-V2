@@ -36,6 +36,13 @@ export function handleSocket(io) {
     // attach a chat message handler =============
     socket.on('chat.message', (message) => {
       console.log(`${socket.id}: ${message}`)
+      // Produce a broadcast message event ===========================
+      // *** This chat message will be received by everyone
+      // except the sender
+      //socket.broadcast.emit('chat.message', { username: socket.id, message })
+
+      // To send message to everyone including the sender ============
+      io.emit('chat.message', { username: socket.id, message })
     })
   })
 }
