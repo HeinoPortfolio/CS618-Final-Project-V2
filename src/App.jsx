@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Blog } from './pages/Blog.jsx'
 import { Signup } from './pages/Signup.jsx'
 import { Login } from './pages/Login.jsx'
+import { Chat } from './pages/Chat.jsx'
 
 // Import router libray functions =============================================
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Blog />,
+  },
+  {
+    path: '/chat',
+    element: <Chat />,
   },
   {
     path: '/signup',
