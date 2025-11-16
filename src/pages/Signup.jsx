@@ -46,6 +46,7 @@ export function Signup() {
           type='text'
           name='create-username'
           id='create-username'
+          autoComplete='off'
           value={username}
           onChange={(event) => setUsername(event.target.value)}
         />
@@ -57,6 +58,7 @@ export function Signup() {
           type='password'
           name='create-password'
           id='create-password'
+          autoComplete='off'
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
