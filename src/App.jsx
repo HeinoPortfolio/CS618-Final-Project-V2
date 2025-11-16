@@ -26,7 +26,17 @@ import { AuthContextProvider } from './contexts/AuthContext.jsx'
 import { io } from 'socket.io-client'
 
 // Create a socket ============================================================
-const socket = io(import.meta.env.VITE_SOCKET_HOST)
+// Socket initializer =========================================================
+/*
+    Note:
+    -- Will get the room parameter from the addess bar.
+    -- Example:  
+      http://localhost:5173/?mymsg=I am leaving the test room&room=public
+    --
+ */
+const socket = io(import.meta.env.VITE_SOCKET_HOST, {
+  query: 'room=' + new URLSearchParams(window.location.search).get('room'),
+})
 
 // Create a router variable ===================================================
 const router = createBrowserRouter([
@@ -45,7 +55,7 @@ const router = createBrowserRouter([
 ])
 
 // Event handlers =============================================================
-socket.on('connect', () => {
+socket.on('connect', async () => {
   console.log('connected to socket.io as', socket.id)
   // Send a message to the server ======================
   // The message will be about being connected =========
@@ -62,6 +72,10 @@ socket.on('connect', () => {
     'chat.message',
     new URLSearchParams(window.location.search).get('mymsg'),
   )
+  // Client user.info ============================================================
+  // Will return a response to the server ========================================
+  const userInfo = await socket.emitWithAck('user.info', socket.id)
+  console.log('User info', userInfo)
 })
 
 socket.on('connect_error', (err) => {
