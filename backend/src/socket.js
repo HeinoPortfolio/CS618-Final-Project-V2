@@ -72,7 +72,7 @@ export function handleSocket(io) {
 
     // a disconnect handler ======================
     socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id)
+      console.log('User disconnected from server:', socket.id)
     })
     // attach a chat message handler =============
     socket.on('chat.message', (message) => {

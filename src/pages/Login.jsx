@@ -59,6 +59,7 @@ export function Login() {
           type='password'
           name='create-password'
           id='create-password'
+          autoComplete='off'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
