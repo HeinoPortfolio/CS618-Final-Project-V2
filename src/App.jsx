@@ -46,10 +46,24 @@ socket.on('connect', () => {
   console.log('Connected to socket.io as', socket.id)
   // Send a message to the server ======================
   // The message will be about being connected =========
-  socket.emit('chat.message', 'Frontend client has connected succesfully!')
+  //socket.emit('chat.message', 'Frontend client has connected succesfully!')
+  /*
+      Note: will get message from parameters in the address bar of the 
+      browser. To differentiate the messages for testing purposes
+  */
+  socket.emit(
+    'chat.message',
+    new URLSearchParams(window.location.search).get('mymsg'),
+  )
 })
+
+// COnnection error event =====================================================
 socket.on('connect_error', (err) => {
   console.error('socket.io connect error:', err)
+})
+//Client chat.message =========================================================
+socket.on('chat.message', (msg) => {
+  console.log(`${msg.username}: ${msg.message}`)
 })
 // End event handlers ==========================================================
 
