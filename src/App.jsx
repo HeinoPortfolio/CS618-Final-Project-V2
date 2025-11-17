@@ -43,10 +43,10 @@ const router = createBrowserRouter([
 
 // Event handlers =============================================================
 socket.on('connect', () => {
-  console.log('connected to socket.io as', socket.id)
+  console.log('Connected to socket.io as', socket.id)
   // Send a message to the server ======================
   // The message will be about being connected =========
-  socket.emit('chat.message', 'Frontend client has connected!')
+  socket.emit('chat.message', 'Frontend client has connected succesfully!')
 })
 socket.on('connect_error', (err) => {
   console.error('socket.io connect error:', err)
