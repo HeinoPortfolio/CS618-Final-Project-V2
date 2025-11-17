@@ -13,8 +13,53 @@ export function useChat() {
     socket.on('chat.message', receiveMessage)
     return () => socket.off('chat.message', receiveMessage)
   }, [])
-  function sendMessage(message) {
-    socket.emit('chat.message', message)
+  /*
+      Note:
+      -- Need to mark this function as asynch since there is a need
+         to await a server response
+  */
+  async function sendMessage(message) {
+    if (message.startsWith('/')) {
+      // Get the command part of the string =====
+      /*
+        Note:
+        -- will be the first character in the string
+      */
+      const command = message.substring(1)
+      switch (command) {
+        // Will clear all messages from the messages array ====================
+        case 'clear':
+          // Reset the array of messages ====
+          setMessages([])
+          break
+        // Will show all the rooms that the user is in ========================
+        /*
+            Note:  
+            -- Will get the user information message 
+            -- Will filter show it does not show the user id only 
+               the room information
+         */
+        case 'rooms': {
+          const userInfo = await socket.emitWithAck('user.info', socket.id)
+          const rooms = userInfo.rooms.filter((room) => room !== socket.id)
+
+          receiveMessage({
+            message: `You are in: ${rooms.join(', ')}`,
+          })
+          break
+        }
+        default:
+          // if unknown message send a message to the user ==========
+          receiveMessage({
+            message: `Unknown command: ${command}`,
+          })
+          break
+      }
+    } else {
+      // Show the message =================================
+      // Show the message and it is not a command =========
+      socket.emit('chat.message', message)
+    }
   }
   return { messages, sendMessage }
 }

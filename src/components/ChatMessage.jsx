@@ -4,8 +4,14 @@ import PropTypes from 'prop-types'
 // Shows the user name and the associated message =====
 export function ChatMessage({ username, message }) {
   return (
-    <div>
-      <b>{username}</b>: {message}
+    <div style={{ padding: '5px' }}>
+      {username ? (
+        <span>
+          <b>{username}</b>: {message}
+        </span>
+      ) : (
+        <i>{message}</i>
+      )}
     </div>
   )
 }
