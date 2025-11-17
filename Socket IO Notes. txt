@@ -1,0 +1,16 @@
+General Notes:
+
+-- Install socket.io into the backend folder:
+    -- npm install socket.io@4.7.2
+-- Switch the database url to:
+    -- will create a new database not a collection 
+    -- DATABASE_URL=mongodb://localhost:27017/recipe-blog-v2-chat
+-- In backend/app.js 
+    -- Integrate the node server and socket.io 
+-- Install socket.io client into frontend:
+    -- npm install socket.io-client@4.7.2
+-- Change the frontend "env" variable:
+    -- VITE_SOCKET_HOST="localhost:3000"
+    -- omit http need just the name of the serve
+--
+-- Moved socket connection to a separate file:  backend/src/socket.js
