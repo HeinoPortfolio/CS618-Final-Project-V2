@@ -1,14 +1,28 @@
 import { Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 import { useAuth } from '../contexts/AuthContext'
-
 import { User } from './User.jsx'
+
+// Import to handle socket io ========= ===========================
+import { useSocket } from '../contexts/SocketIOContext.jsx'
 
 // Header to show the links for signup ==========
 export function Header() {
   // Authentication states ========================================
+
   const [token, setToken] = useAuth()
 
+  // Handle the logout ========================================================
+
+  const { socket } = useSocket()
+
+  const handleLogout = () => {
+    socket.disconnect()
+
+    setToken(null)
+
+    //navigate('/')
+  }
   if (token) {
     const { sub } = jwtDecode(token)
     return (
@@ -24,7 +38,7 @@ export function Header() {
         </b>
         <br />
         <br />
-        <button onClick={() => setToken(null)}>Click Here To Logout</button>
+        <button onClick={handleLogout}>Click Here To Logout</button>
         <br />
         <br />
         <hr />

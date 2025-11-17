@@ -8,9 +8,12 @@
 */
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // Pages for the application =================================================
-import { Blog } from './pages/Blog.jsx'
+//import { Blog } from './pages/Blog.jsx'
 import { Signup } from './pages/Signup.jsx'
 import { Login } from './pages/Login.jsx'
+
+import { Chat } from './pages/Chat.jsx'
+
 // Import router libray functions =============================================
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 // Provide the token ==========================================================
@@ -22,10 +25,11 @@ const queryClient = new QueryClient()
 
 // Create a router variable ===================================================
 const router = createBrowserRouter([
+  /*
   {
     path: '/',
     element: <Blog />,
-  },
+  },*/
   {
     path: '/signup',
     element: <Signup />,
@@ -33,6 +37,11 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+
+  {
+    path: '/',
+    element: <Chat />,
   },
 ]) // end router variable
 
