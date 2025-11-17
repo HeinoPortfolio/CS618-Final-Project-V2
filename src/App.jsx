@@ -32,6 +32,9 @@ import { io } from 'socket.io-client'
 
 const socket = io(import.meta.env.VITE_SOCKET_HOST, {
   query: 'room=' + new URLSearchParams(window.location.search).get('room'),
+  auth: {
+    token: new URLSearchParams(window.location.search).get('token'),
+  },
 })
 
 // Create a new query client to call the backend ==============================

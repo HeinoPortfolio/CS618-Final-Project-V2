@@ -23,7 +23,13 @@ export function CreateRecipe() {
     mutationFn: () => createRecipe(token, { title, ingredientList, imageURL }),
     onSuccess: (data) => {
       queryClient.invalidateQueries(['recipes']),
-        console.log('User data:', data._id)
+        console.log('Recipe ID data: ', data._id),
+        console.log('Author ID data: ', data.author),
+        console.log('Image URL link: ', data.imageURL),
+        // Set fields to empty =========================
+        setTitle(''),
+        setIngredientList(''),
+        setImageURL('')
     },
   })
 
