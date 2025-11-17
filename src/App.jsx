@@ -15,27 +15,7 @@ import { Login } from './pages/Login.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 // Provide the token ==========================================================
 import { AuthContextProvider } from './contexts/AuthContext.jsx'
-
-// Import for socke.io client =================================================
-import { io } from 'socket.io-client'
-
-// Create a socket ============================================================
-//const socket = io(import.meta.env.VITE_SOCKET_HOST)
-// Socket initializer =========================================================
-/*
-    Note:
-    -- Will get the room parameter from the addess bar.
-    -- Example:  
-      http://localhost:5173/?mymsg=I am leaving the test room&room=public
-
- */
-
-const socket = io(import.meta.env.VITE_SOCKET_HOST, {
-  query: 'room=' + new URLSearchParams(window.location.search).get('room'),
-  auth: {
-    token: new URLSearchParams(window.location.search).get('token'),
-  },
-})
+import { SocketIOContextProvider } from './contexts/SocketIOContext.jsx'
 
 // Create a new query client to call the backend ==============================
 const queryClient = new QueryClient()
@@ -56,43 +36,14 @@ const router = createBrowserRouter([
   },
 ]) // end router variable
 
-// Event handlers =============================================================
-socket.on('connect', async () => {
-  console.log('Connected to socket.io as', socket.id)
-  // Send a message to the server ======================
-  // The message will be about being connected =========
-  //socket.emit('chat.message', 'Frontend client has connected succesfully!')
-  /*
-      Note: will get message from parameters in the address bar of the 
-      browser. To differentiate the messages for testing purposes
-  */
-  socket.emit(
-    'chat.message',
-    new URLSearchParams(window.location.search).get('mymsg'),
-  )
-  // Client user.info ============================================================
-  // Will return a response to the server ========================================
-
-  const userInfo = await socket.emitWithAck('user.info', socket.id)
-  console.log('User info: ', userInfo)
-})
-
-// Connection error event =====================================================
-socket.on('connect_error', (err) => {
-  console.error('socket.io connect error:', err)
-})
-//Client chat.message =========================================================
-socket.on('chat.message', (msg) => {
-  console.log(`${msg.username}: ${msg.message}`)
-})
-// End event handlers ==========================================================
-
 // The application function ===========
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
-        <RouterProvider router={router} />
+        <SocketIOContextProvider>
+          <RouterProvider router={router} />
+        </SocketIOContextProvider>
       </AuthContextProvider>
     </QueryClientProvider>
   )
