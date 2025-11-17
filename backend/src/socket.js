@@ -14,8 +14,12 @@
 import jwt from 'jsonwebtoken'
 import { getUserInfoById } from './services/users.js'
 
-// import to get messages to be replayed ======================================
-import { createMessage, getMessagesByRoom } from './services/messages.js'
+// Import the service function ===============================================
+import {
+  joinRoom,
+  sendPublicMessage,
+  getUserInfoBySocketId,
+} from './services/chat.js'
 
 // Setup a connection event  ==================================================
 /*
@@ -57,69 +61,17 @@ export function handleSocket(io) {
   }) // End Authentication ============
 
   io.on('connection', async (socket) => {
-    // On connection display a message to the
-    // console with socket id
+    // Service to join a room ==============
+    joinRoom(io, socket, { room: 'public' })
 
-    console.log('User connected:', socket.id)
-
-    // Disconnect handler ======================
-    socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id)
-    })
-
-    // Room addition ===========================================================
-    // Will receive the room the user wants to be in ===========================
-    // Default will be a public room ===========================================
-
-    const room = socket.handshake.query?.room ?? 'public'
-
-    // Join the room ===========================================================
-    socket.join(room)
-    // Message to show that the user joined a room =============
-    console.log(socket.id, 'Joined room:', room)
-
-    // Get the messages from database =========================================
-    const messages = await getMessagesByRoom(room)
-
-    //
-    messages.forEach(({ username, message }) =>
-      socket.emit('chat.message', { username, message, replayed: true }),
+    // sendPublicMessage
+    socket.on('chat.message', (room, message) =>
+      // Send a message and create it in the database =========================
+      sendPublicMessage(io, { username: socket.user.username, room, message }),
     )
-
-    // Room addition end ======================================================
-
-    // attach a chat message handler =============
-    socket.on('chat.message', (message) => {
-      console.log(`${socket.id}: ${message}`)
-
-      // Produce a broadcast message event ===========================
-      // *** This chat message will be received by everyone
-      // except the sender
-      //socket.broadcast.emit('chat.message', { username: socket.id, message })
-      // To send message to everyone including the sender ======================
-      //io.emit('chat.message', { username: socket.id, message })
-
-      // Will be broadcasting to the room only ================================
-      io.to(room).emit('chat.message', {
-        username: socket.user.username,
-        message,
-      })
-      // Store the message in the database ====================================
-      createMessage({ username: socket.user.username, message, room })
-    })
-    // Get user information ===================================================
-    socket.on('user.info', async (socketId, callback) => {
-      const sockets = await io.in(socketId).fetchSockets()
-
-      if (sockets.length === 0) return callback(null)
-
-      const socket = sockets[0]
-      const userInfo = {
-        socketId,
-        rooms: Array.from(socket.rooms),
-        user: socket.user,
-      }
-      return callback(userInfo)
-    })
+    // Receive the user information ===========================================
+    socket.on('user.info', async (socketId, callback) =>
+      callback(await getUserInfoBySocketId(io, socketId)),
+    )
   })
 }
