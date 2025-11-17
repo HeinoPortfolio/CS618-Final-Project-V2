@@ -14,6 +14,9 @@
 import jwt from 'jsonwebtoken'
 import { getUserInfoById } from './services/users.js'
 
+// import to get messages to be replayed ======================================
+import { createMessage, getMessagesByRoom } from './services/messages.js'
+
 // Setup a connection event  ==================================================
 /*
     Note:
@@ -53,7 +56,7 @@ export function handleSocket(io) {
     )
   }) // End Authentication ============
 
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
     // On connection display a message to the
     // console with socket id
 
@@ -75,6 +78,14 @@ export function handleSocket(io) {
     // Message to show that the user joined a room =============
     console.log(socket.id, 'Joined room:', room)
 
+    // Get the messages from database =========================================
+    const messages = await getMessagesByRoom(room)
+
+    //
+    messages.forEach(({ username, message }) =>
+      socket.emit('chat.message', { username, message, replayed: true }),
+    )
+
     // Room addition end ======================================================
 
     // attach a chat message handler =============
@@ -93,6 +104,8 @@ export function handleSocket(io) {
         username: socket.user.username,
         message,
       })
+      // Store the message in the database ====================================
+      createMessage({ username: socket.user.username, message, room })
     })
     // Get user information ===================================================
     socket.on('user.info', async (socketId, callback) => {
