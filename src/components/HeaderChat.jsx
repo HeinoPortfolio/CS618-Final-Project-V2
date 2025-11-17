@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 import { useAuth } from '../contexts/AuthContext'
 import { User } from './User.jsx'
@@ -7,22 +7,22 @@ import { User } from './User.jsx'
 import { useSocket } from '../contexts/SocketIOContext.jsx'
 
 // Header to show the links for signup ==========
-export function Header() {
+export function HeaderChat() {
   // Authentication states ========================================
-
   const [token, setToken] = useAuth()
 
-  // Handle the logout ========================================================
+  const navigate = useNavigate()
 
+  // Create the socket ========================================================
   const { socket } = useSocket()
 
+  // Handle the logout ========================================================
   const handleLogout = () => {
     socket.disconnect()
-
     setToken(null)
-
-    //navigate('/')
+    navigate('/')
   }
+
   if (token) {
     const { sub } = jwtDecode(token)
     return (
@@ -40,7 +40,6 @@ export function Header() {
         <br />
         <button onClick={handleLogout}>Click Here To Logout</button>
         <br />
-        <Link to='/chat'> Chat Room</Link>
         <br />
         <hr />
         <br />
@@ -52,7 +51,7 @@ export function Header() {
     <div>
       <h1>Welcome To The Recipe Blog! </h1>
       <Link to='/login'> Login Here </Link> &nbsp; | &nbsp;
-      <Link to='/signup'> Sign Up Here</Link>
+      <Link to='/signup'> Sign Up Here</Link> &nbsp;| &nbsp;
       <br />
       <hr />
     </div>
