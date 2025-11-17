@@ -20,7 +20,19 @@ import { AuthContextProvider } from './contexts/AuthContext.jsx'
 import { io } from 'socket.io-client'
 
 // Create a socket ============================================================
-const socket = io(import.meta.env.VITE_SOCKET_HOST)
+//const socket = io(import.meta.env.VITE_SOCKET_HOST)
+// Socket initializer =========================================================
+/*
+    Note:
+    -- Will get the room parameter from the addess bar.
+    -- Example:  
+      http://localhost:5173/?mymsg=I am leaving the test room&room=public
+
+ */
+
+const socket = io(import.meta.env.VITE_SOCKET_HOST, {
+  query: 'room=' + new URLSearchParams(window.location.search).get('room'),
+})
 
 // Create a new query client to call the backend ==============================
 const queryClient = new QueryClient()
@@ -42,7 +54,7 @@ const router = createBrowserRouter([
 ]) // end router variable
 
 // Event handlers =============================================================
-socket.on('connect', () => {
+socket.on('connect', async () => {
   console.log('Connected to socket.io as', socket.id)
   // Send a message to the server ======================
   // The message will be about being connected =========
@@ -55,9 +67,14 @@ socket.on('connect', () => {
     'chat.message',
     new URLSearchParams(window.location.search).get('mymsg'),
   )
+  // Client user.info ============================================================
+  // Will return a response to the server ========================================
+
+  const userInfo = await socket.emitWithAck('user.info', socket.id)
+  console.log('User info: ', userInfo)
 })
 
-// COnnection error event =====================================================
+// Connection error event =====================================================
 socket.on('connect_error', (err) => {
   console.error('socket.io connect error:', err)
 })
