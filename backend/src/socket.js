@@ -64,6 +64,11 @@ export function handleSocket(io) {
     // Service to join a room ==============
     joinRoom(io, socket, { room: 'public' })
 
+    // Disconnect handler ======================
+    socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id)
+    })
+
     // sendPublicMessage
     socket.on('chat.message', (room, message) =>
       // Send a message and create it in the database =========================

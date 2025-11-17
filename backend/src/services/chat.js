@@ -5,15 +5,18 @@ export function sendPrivateMessage(
   { username, room, message, replayed },
 ) {
   socket.emit('chat.message', { username, message, room, replayed })
+  console.log('Private message was sent: ', message)
 }
 
 export function sendSystemMessage(io, { room, message }) {
   io.to(room).emit('chat.message', { message, room })
+  console.log('A system message was sent.', message)
 }
 
 export function sendPublicMessage(io, { username, room, message }) {
   io.to(room).emit('chat.message', { username, message, room })
   createMessage({ username, message, room })
+  console.log('A public message was created.', message)
 }
 
 export async function joinRoom(io, socket, { room }) {
