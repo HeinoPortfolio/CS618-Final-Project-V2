@@ -8,6 +8,8 @@ import { useState } from 'react'
 
 import { Header } from '../components/Header.jsx'
 
+import { Status } from '../components/Status.jsx'
+
 export function Blog() {
   // Use states of the BLog application ===================
   /* 
@@ -36,6 +38,9 @@ export function Blog() {
   return (
     <div style={{ padding: 10 }}>
       <Header />
+      <br />
+      <Status />
+      <br />
       <CreateRecipe />
       <br />
       <hr />
