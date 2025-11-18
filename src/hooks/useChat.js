@@ -4,21 +4,10 @@ import { useSocket } from '../contexts/SocketIOContext.jsx'
 export function useChat() {
   const { socket } = useSocket()
   const [messages, setMessages] = useState([])
+  const [currentRoom, setCurrentRoom] = useState('public')
 
-  // Appends new message to the array ==================
   function receiveMessage(message) {
     setMessages((messages) => [...messages, message])
-  }
-
-  function clearMessages() {
-    setMessages([])
-  }
-
-  async function getRooms() {
-    const userInfo = await socket.emitWithAck('user.info', socket.id)
-    const rooms = userInfo.rooms.filter((room) => room !== socket.id)
-
-    return rooms
   }
 
   useEffect(() => {
@@ -26,48 +15,91 @@ export function useChat() {
     return () => socket.off('chat.message', receiveMessage)
   }, [])
 
-  // Function to send a message =====================================
+  function clearMessages() {
+    setMessages([])
+  }
+
+  // Switch to a room ==================
+  function switchRoom(room) {
+    setCurrentRoom(room)
+  }
+
+  // Join a room ========================
+  function joinRoom(room) {
+    socket.emit('chat.join', room)
+    switchRoom(room)
+  }
+
+  async function getRooms() {
+    const userInfo = await socket.emitWithAck('user.info', socket.id)
+    const rooms = userInfo.rooms.filter((room) => room !== socket.id)
+    return rooms
+  }
+
   async function sendMessage(message) {
     if (message.startsWith('/')) {
-      // Get the command part of the string =====
-      /*
-        Note:
-        -- will be the first character in the string
-      */
-      const command = message.substring(1)
+      const [command, ...args] = message.substring(1).split(' ')
       switch (command) {
-        // Will clear all messages from the messages array ====================
         case 'clear':
-          // Reset the array of messages ====
           clearMessages()
           break
-        // Will show all the rooms that the user is in ========================
-        /*
-            Note:  
-            -- Will get the user information message 
-            -- Will filter show it does not show the user id only 
-               the room information
-         */
         case 'rooms': {
-          const rooms = getRooms()
-
+          const rooms = await getRooms()
           receiveMessage({
-            message: `You are in the following room: ${rooms.join(', ')}`,
+            message: `You are in: ${rooms.join(', ')}`,
+          })
+          break
+        }
+        case 'join': {
+          if (args.length === 0) {
+            return receiveMessage({
+              message: 'Please provide a room name: /join <room>',
+            })
+          }
+          // Get the room name ===========
+          const room = args[0]
+          // Get list of available rooms =====
+          const rooms = await getRooms()
+
+          if (rooms.includes(room)) {
+            return receiveMessage({
+              message: `You are already in room "${room}".`,
+            })
+          }
+          // Join if the user is not already in the room =======
+          joinRoom(room)
+          break
+        }
+        case 'switch': {
+          if (args.length === 0) {
+            return receiveMessage({
+              message: 'Please provide a room name: /switch <room>',
+            })
+          }
+          const room = args[0]
+          const rooms = await getRooms()
+
+          if (!rooms.includes(room)) {
+            return receiveMessage({
+              message: `You are not in room "${room}". Type "/join ${room}" to join it first.`,
+            })
+          }
+          switchRoom(room)
+          receiveMessage({
+            message: `Switched to room "${room}".`,
           })
           break
         }
         default:
-          // if unknown message send a message to the user ==========
           receiveMessage({
             message: `Unknown command: ${command}`,
           })
           break
       }
     } else {
-      // Show the message =================================
-      // Show the message and it is not a command =========
-      socket.emit('chat.message', 'public', message)
+      socket.emit('chat.message', currentRoom, message)
     }
   }
+
   return { messages, sendMessage }
 }

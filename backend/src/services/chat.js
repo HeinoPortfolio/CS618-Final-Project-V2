@@ -33,11 +33,11 @@ export async function joinRoom(io, socket, { room }) {
 }
 
 export async function getUserInfoBySocketId(io, socketId) {
-  const sockets = await io.in(socketId).fectSockets()
+  const sockets = await io.in(socketId).fetchSockets()
 
   if (sockets.length === 0) return null
 
-  const socket = socket[0]
+  const socket = sockets[0]
   const userInfo = {
     socketId,
     rooms: Array.from(socket.rooms),
