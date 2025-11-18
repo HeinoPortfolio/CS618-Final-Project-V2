@@ -27,7 +27,7 @@ export function HeaderChat() {
     const { sub } = jwtDecode(token)
     return (
       <div>
-        <h1>Welcome To The Recipe Blog! </h1>
+        <h1>Welcome To The Recipe Blog Chat! </h1>
         <br />
         <b>
           Logged in as:&nbsp;{' '}
