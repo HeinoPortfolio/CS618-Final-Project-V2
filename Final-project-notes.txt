@@ -22,7 +22,7 @@ const res = await fetch('http://localhost:3000/api/v1/user/signup', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ username: 'archie', password: 'dog' }),})
 
----- to login a user in DevTools:
+----- To login a user in DevTools:
 
 const res = await fetch('http://localhost:3000/api/v1/user/login', {
   method: 'POST',
@@ -30,3 +30,4 @@ const res = await fetch('http://localhost:3000/api/v1/user/login', {
   body: JSON.stringify({ username: 'mheino', password: 'archie' }),
 })
 
+----- In the frontend to run the distribution server use: serve dist
