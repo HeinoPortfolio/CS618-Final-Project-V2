@@ -31,3 +31,8 @@ const res = await fetch('http://localhost:3000/api/v1/user/login', {
 })
 
 ----- In the frontend to run the distribution server use: serve dist
+-- To run the frontend use:                     npm run dev
+
+-- To run the backend use:                      npm start 
+
+-- To start the backend in development mode:    npm run dev
