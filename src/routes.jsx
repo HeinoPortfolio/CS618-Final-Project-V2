@@ -64,7 +64,7 @@ export const routes = [
   },
   // Recipe by ID ===================================================
   {
-    path: '/recipes/:recipeId',
+    path: '/recipes/:recipeId/:slug?',
 
     loader: async ({ params }) => {
       const recipeId = params.recipeId
