@@ -2,7 +2,7 @@
     File Purpse:
     -- This file create an Express server
     -- Server will create the HTML pages and then send the response
-    -- 
+    -- Will create both a production and development server 
 */
 
 import fs from 'fs'
@@ -15,16 +15,46 @@ dotenv.config()
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-async function createDevServer() {
+// Create the production server ===============================================
+async function createProdServer() {
   const app = express()
 
+  app.use((await import('compression')).default())
+  app.use(
+    (await import('serve-static')).default(
+      path.resolve(__dirname, 'dist/client'),
+      {
+        index: false,
+      },
+    ),
+  )
+  app.use('*', async (req, res, next) => {
+    try {
+      let template = fs.readFileSync(
+        path.resolve(__dirname, 'dist/client/index.html'),
+        'utf-8',
+      )
+      const render = (await import('./dist/server/entry-server.js')).render
+      const appHtml = await render(req)
+      const html = template.replace(`<!--ssr-outlet-->`, appHtml)
+
+      res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
+    } catch (e) {
+      next(e)
+    }
+  })
+  return app
+}
+
+// Create the development serever =============================================
+async function createDevServer() {
+  const app = express()
   const vite = await (
     await import('vite')
   ).createServer({
     server: { middlewareMode: true },
     appType: 'custom',
   })
-
   app.use(vite.middlewares)
 
   app.use('*', async (req, res, next) => {
@@ -50,8 +80,18 @@ async function createDevServer() {
   return app
 }
 
-const app = await createDevServer()
-
-app.listen(process.env.PORT, () =>
-  console.log(`SSR dev server running on http://localhost:${process.env.PORT}`),
-)
+if (process.env.NODE_ENV === 'production') {
+  const app = await createProdServer()
+  app.listen(process.env.PORT, () =>
+    console.log(
+      `ssr production server running on http://localhost:${process.env.PORT}`,
+    ),
+  )
+} else {
+  const app = await createDevServer()
+  app.listen(process.env.PORT, () =>
+    console.log(
+      `ssr dev server running on http://localhost:${process.env.PORT}`,
+    ),
+  )
+}
