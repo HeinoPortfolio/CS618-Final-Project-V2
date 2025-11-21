@@ -24,7 +24,7 @@ export const SocketIOContextProvider = ({ children }) => {
         auth: { token },
       })
 
-      console.log('Had Token!')
+      console.log('Had Token! Socket is connected!')
 
       // after receiving a token attempt to connect to the socket =============
       socket.on('connect', () => {

@@ -5,8 +5,9 @@ import { RecipeSorting } from '../components/RecipeSorting.jsx'
 import { useQuery } from '@tanstack/react-query'
 import { getRecipes } from '../api/recipes.js'
 import { useState } from 'react'
-
 import { Header } from '../components/Header.jsx'
+
+import { useSocket } from '../contexts/SocketIOContext.jsx'
 
 export function Blog() {
   // Use states of the BLog application ===================
@@ -33,9 +34,16 @@ export function Blog() {
   // Get the data from the query ============================
   const recipes = recipesQuery.data ?? []
 
+  // Get the socket conection
+  const { status } = useSocket()
+
   return (
     <div style={{ padding: 10 }}>
       <Header />
+      <br />
+      The connection status is:&nbsp;&nbsp; <b>{status} </b>
+      <br />
+      <br />
       <CreateRecipe />
       <br />
       <hr />
@@ -47,7 +55,6 @@ export function Blog() {
       />
       <br />
       <hr />
-
       <RecipeSorting
         fields={['createdAt', 'updatedAt']}
         value={sortBy}
