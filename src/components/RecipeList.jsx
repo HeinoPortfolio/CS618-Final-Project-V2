@@ -10,6 +10,7 @@ import { Recipe } from './Recipe.jsx'
 export function RecipeList({ recipes = [] }) {
   return (
     <div>
+      <hr />
       {recipes.map((recipe) => (
         <Fragment key={recipe._id}>
           <Recipe {...recipe} />

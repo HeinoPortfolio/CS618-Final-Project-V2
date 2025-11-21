@@ -4,7 +4,7 @@ import { Login } from './pages/Login.jsx'
 import { Chat } from './pages/Chat.jsx'
 
 import { useLoaderData } from 'react-router-dom'
-import { getRecipes } from './api/recipes.js'
+//import { getRecipes } from './api/recipes.js'
 import { getUserInfo } from './api/users.js'
 
 import {
@@ -12,6 +12,9 @@ import {
   dehydrate,
   HydrationBoundary,
 } from '@tanstack/react-query'
+
+import { getRecipeById, getRecipes } from './api/recipes.js'
+import { ViewRecipe } from './pages/ViewRecipe.jsx'
 
 // Create a router variable ===================================================
 export const routes = [
@@ -58,5 +61,39 @@ export const routes = [
   {
     path: '/chat',
     element: <Chat />,
+  },
+  // Recipe by ID ===================================================
+  {
+    path: '/recipes/:recipeId',
+
+    loader: async ({ params }) => {
+      const recipeId = params.recipeId
+      const queryClient = new QueryClient()
+      const recipe = await getRecipeById(recipeId)
+
+      await queryClient.prefetchQuery({
+        queryKey: ['recipe', recipeId],
+        queryFn: () => getUserInfo(recipe.author),
+      })
+
+      if (recipe?.author) {
+        await queryClient.prefetchQuery({
+          queryKey: ['users', recipe.author],
+          queryFn: () => getUserInfo(recipe.author),
+        })
+      }
+
+      return { dehydratedState: dehydrate(queryClient), recipeId }
+    },
+
+    Component() {
+      const { dehydratedState, recipeId } = useLoaderData()
+
+      return (
+        <HydrationBoundary state={dehydratedState}>
+          <ViewRecipe recipeId={recipeId} />
+        </HydrationBoundary>
+      )
+    },
   },
 ] // end router variable

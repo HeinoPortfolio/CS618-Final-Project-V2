@@ -63,6 +63,7 @@ export function Blog() {
         onOrderChange={(orderValue) => setSortOrder(orderValue)}
       />
       <hr />
+      <h2>Click on one of the recipes below to see more information.</h2>
       <div
         style={{
           maxHeight: '600px',
@@ -73,6 +74,7 @@ export function Blog() {
           padding: '50px',
         }}
       >
+        {' '}
         <RecipeList recipes={recipes} />
       </div>
     </div>
