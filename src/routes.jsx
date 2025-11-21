@@ -1,14 +1,51 @@
 import { Blog } from './pages/Blog.jsx'
 import { Signup } from './pages/Signup.jsx'
 import { Login } from './pages/Login.jsx'
-
 import { Chat } from './pages/Chat.jsx'
+
+import { useLoaderData } from 'react-router-dom'
+import { getRecipes } from './api/recipes.js'
+import { getUserInfo } from './api/users.js'
+
+import {
+  QueryClient,
+  dehydrate,
+  HydrationBoundary,
+} from '@tanstack/react-query'
 
 // Create a router variable ===================================================
 export const routes = [
   {
     path: '/',
-    element: <Blog />,
+    loader: async () => {
+      const queryClient = new QueryClient()
+      const author = ''
+      const sortBy = 'createdAt'
+      const sortOrder = 'descending'
+      const recipes = await getRecipes({ author, sortBy, sortOrder })
+      await queryClient.prefetchQuery({
+        queryKey: ['recipes', { author, sortBy, sortOrder }],
+        queryFn: () => recipes,
+      })
+      const uniqueAuthors = recipes
+        .map((post) => post.author)
+        .filter((value, index, array) => array.indexOf(value) === index)
+      for (const userId of uniqueAuthors) {
+        await queryClient.prefetchQuery({
+          queryKey: ['users', userId],
+          queryFn: () => getUserInfo(userId),
+        })
+      }
+      return dehydrate(queryClient)
+    },
+    Component() {
+      const dehydratedState = useLoaderData()
+      return (
+        <HydrationBoundary state={dehydratedState}>
+          <Blog />
+        </HydrationBoundary>
+      )
+    },
   },
   {
     path: '/signup',
@@ -18,7 +55,6 @@ export const routes = [
     path: '/login',
     element: <Login />,
   },
-
   {
     path: '/chat',
     element: <Chat />,
