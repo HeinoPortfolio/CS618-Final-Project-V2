@@ -8,51 +8,28 @@
 */
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // Pages for the application =================================================
-import { Blog } from './pages/Blog.jsx'
-import { Signup } from './pages/Signup.jsx'
-import { Login } from './pages/Login.jsx'
 
-import { Chat } from './pages/Chat.jsx'
-
-// Import router libray functions =============================================
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 // Provide the token ==========================================================
 import { AuthContextProvider } from './contexts/AuthContext.jsx'
 import { SocketIOContextProvider } from './contexts/SocketIOContext.jsx'
 
+// Import Proptypes ==========================================================
+import PropTypes from 'prop-types'
+
 // Create a new query client to call the backend ==============================
 const queryClient = new QueryClient()
 
-// Create a router variable ===================================================
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Blog />,
-  },
-  {
-    path: '/signup',
-    element: <Signup />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-
-  {
-    path: '/chat',
-    element: <Chat />,
-  },
-]) // end router variable
-
 // The application function ===========
-export function App() {
+export function App({ children }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
-        <SocketIOContextProvider>
-          <RouterProvider router={router} />
-        </SocketIOContextProvider>
+        <SocketIOContextProvider>{children}</SocketIOContextProvider>
       </AuthContextProvider>
     </QueryClientProvider>
   )
+}
+
+App.propTypes = {
+  children: PropTypes.element.isRequired,
 }

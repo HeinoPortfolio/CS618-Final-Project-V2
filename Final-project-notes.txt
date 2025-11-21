@@ -3,14 +3,16 @@
     -- Created a new src/App.jsx 
         -- used to import tools like tanstack, the query client and 
         the query provider 
-    -- In module 6 created a 'pages' folder and moved or created the 
+    -- In module 6, created a 'pages' folder and moved or created the 
        following files:
        -- Blog.jsx (moved)
        -- 
+    -- In module 8, renamed main.jsx to entry-client.jsx 
 
 -- Environment Variables:
     -- DATABASE_URL=mongodb://localhost:27017/recipe-blog-v2
     -- VITE_BACKEND_URL="http://localhost:3000/api/v1"
+    -- [For SSR] --> PORT=5173
 
 -- Other
 
