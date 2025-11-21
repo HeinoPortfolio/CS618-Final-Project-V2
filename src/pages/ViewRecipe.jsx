@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useQuery } from '@tanstack/react-query'
-//import { Helmet } from 'react-helmet-async'
+import { Helmet } from 'react-helmet-async'
 import { Header } from '../components/Header.jsx'
 import { Recipe } from '../components/Recipe.jsx'
 import { getRecipeById } from '../api/recipes.js'
@@ -20,6 +20,11 @@ export function ViewRecipe({ recipeId }) {
   // Form for displaring the data =================
   return (
     <div style={{ padding: 10 }}>
+      {recipe.title && (
+        <Helmet>
+          <title>{recipe.title} | This Is The Recipe Blog </title>
+        </Helmet>
+      )}
       <Header />
       <br />
       <hr />
