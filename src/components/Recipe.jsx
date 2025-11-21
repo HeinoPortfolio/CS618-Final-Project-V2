@@ -28,7 +28,7 @@ export function Recipe({
       ) : (
         <Link to={`/recipes/${_id}`}>
           <h3> {title} </h3>
-          <div style={{ 'font-size': '18px' }}>
+          <div style={{ fontSize: '18px' }}>
             <pre>{ingredientList}</pre>
           </div>
           <div>
@@ -68,10 +68,10 @@ export function Recipe({
 } // end Recipe
 
 Recipe.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   ingredientList: PropTypes.string,
   author: PropTypes.string,
   imageURL: PropTypes.string,
-  _id: PropTypes.string.isRequired,
+  _id: PropTypes.string,
   fullPost: PropTypes.bool,
 }
