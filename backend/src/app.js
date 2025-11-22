@@ -4,6 +4,7 @@ import cors from 'cors'
 // Import the routes =====
 import { recipesRoutes } from './routes/recipes.js'
 import { userRoutes } from './routes/users.js'
+import { eventRoutes } from './routes/events.js'
 
 // Import socket.io and node libraries
 import { createServer } from 'node:http'
@@ -17,9 +18,11 @@ const app = express()
 app.use(bodyParser.json())
 // Use the CORS ===========================================
 app.use(cors())
+
 // Call the routes functions ==============================
 recipesRoutes(app)
 userRoutes(app)
+eventRoutes(app)
 
 // Create a node server ==================================
 /*
