@@ -13,6 +13,8 @@
     -- DATABASE_URL=mongodb://localhost:27017/recipe-blog-v2
     -- VITE_BACKEND_URL="http://localhost:3000/api/v1"
     -- [For SSR] --> PORT=5173
+    -- Fake database URL is:  
+      -- DATABASE_URL=mongodb://localhost:27017/recipes-blog-simulated
 
 -- Other
 
