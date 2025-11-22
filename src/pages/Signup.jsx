@@ -37,6 +37,7 @@ export function Signup() {
   // Signup form ==============================================================
   return (
     <form onSubmit={handleSubmit}>
+      <h1>Welcome to the Signup Page</h1>
       <Link to='/'>Click Here To Go Back To Main Page</Link>
       <hr />
       <br />
