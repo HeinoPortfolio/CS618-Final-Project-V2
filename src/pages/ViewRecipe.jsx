@@ -1,14 +1,44 @@
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { Header } from '../components/Header.jsx'
 import { Recipe } from '../components/Recipe.jsx'
 import { getRecipeById } from '../api/recipes.js'
-//import { getUserInfo } from '../api/users.js'
+
+import { useEffect, useState } from 'react'
+import { recipeTrackEvent } from '../api/events.js'
 
 export function ViewRecipe({ recipeId }) {
-  // Query function =========
+  // Session states ===========================================================
+  const [session, setSession] = useState()
+
+  // Mutation to handle the user view event and update the system =============
+  const trackEventMutation = useMutation({
+    mutationFn: (action) => recipeTrackEvent({ recipeId, action, session }),
+    onSuccess: (data) => setSession(data?.session),
+  })
+
+  // Define a hook to handle page view ========================================
+  /* 
+      Note: 
+      -- will call the mutation after one (1) second has elapsed 
+         to record the user has viewed the page
+
+  */
+  useEffect(() => {
+    let timeout = setTimeout(() => {
+      trackEventMutation.mutate('startview')
+      timeout = null
+    }, 1000)
+
+    return () => {
+      if (timeout) clearTimeout(timeout)
+      else trackEventMutation.mutate('endview')
+    }
+  }, [])
+
+  // Query function ===========================================================
   const recipeQuery = useQuery({
     queryKey: ['recipe', recipeId],
     queryFn: () => getRecipeById(recipeId),
