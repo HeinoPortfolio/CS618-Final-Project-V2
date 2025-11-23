@@ -2,19 +2,17 @@ import { Blog } from './pages/Blog.jsx'
 import { Signup } from './pages/Signup.jsx'
 import { Login } from './pages/Login.jsx'
 import { Chat } from './pages/Chat.jsx'
-
 import { useLoaderData } from 'react-router-dom'
-//import { getRecipes } from './api/recipes.js'
 import { getUserInfo } from './api/users.js'
-
 import {
   QueryClient,
   dehydrate,
   HydrationBoundary,
 } from '@tanstack/react-query'
-
 import { getRecipeById, getRecipes } from './api/recipes.js'
 import { ViewRecipe } from './pages/ViewRecipe.jsx'
+
+import { ViewRecipeStats } from './pages/ViewRecipeStats.jsx'
 
 // Create a router variable ===================================================
 export const routes = [
@@ -62,6 +60,7 @@ export const routes = [
     path: '/chat',
     element: <Chat />,
   },
+  { path: '/ViewRecipeStats', element: <ViewRecipeStats /> },
   // Recipe by ID ===================================================
   {
     path: '/recipes/:recipeId/:slug?',

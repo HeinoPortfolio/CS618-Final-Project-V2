@@ -36,7 +36,7 @@ export function ViewRecipeStatsComp() {
     <div
       style={{
         padding: 8,
-        fontSize: 22,
+        fontSize: 16,
       }}
     >
       <br />

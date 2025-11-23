@@ -8,13 +8,13 @@
         line (\n) character
 
 */
+// Recipe component ===========================================================
+
 import PropTypes from 'prop-types'
 import { User } from './User.jsx'
 import { Link } from 'react-router-dom'
 
 import slug from 'slug'
-
-// Recipe component ===========================================================
 export function Recipe({
   title,
   author,
@@ -43,7 +43,11 @@ export function Recipe({
           </div>
         </Link>
       )}
-      {fullPost && <div>{ingredientList}</div>}
+      {fullPost && (
+        <div style={{ fontSize: '18px' }}>
+          <pre>{ingredientList}</pre>
+        </div>
+      )}
       {author && (
         <em>
           {' '}

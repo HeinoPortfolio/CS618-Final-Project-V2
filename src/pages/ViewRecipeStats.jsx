@@ -41,7 +41,6 @@ export function ViewRecipeStats() {
     <div
       style={{
         padding: 8,
-        fontSize: 22,
       }}
     >
       <Helmet>
@@ -63,10 +62,11 @@ export function ViewRecipeStats() {
         style={{
           padding: 12,
           maxHeight: '500px',
-          maxWidth: '1000px',
+          maxWidth: '500px',
           overflowY: 'scroll',
           overflowX: 'scroll',
           border: '3px solid #ccc',
+          fontSize: 16,
         }}
       >
         <ul style={listStyle}>

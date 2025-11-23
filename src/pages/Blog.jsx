@@ -7,8 +7,10 @@ import { getRecipes } from '../api/recipes.js'
 import { useState } from 'react'
 import { Header } from '../components/Header.jsx'
 import { useSocket } from '../contexts/SocketIOContext.jsx'
-
 import { Helmet } from 'react-helmet-async'
+
+import { useNavigate } from 'react-router-dom'
+import { ViewRecipeStatsComp } from '../components/ViewRecipeStatsComp.jsx'
 
 export function Blog() {
   // Use states of the BLog application ===================
@@ -21,6 +23,18 @@ export function Blog() {
   const [author, setAuthor] = useState('')
   const [sortBy, setSortBy] = useState('createdAt')
   const [sortOrder, setSortOrder] = useState('descending')
+
+  // Button states ============================================================
+  const [likeStatText] = useState('Click Here To View Recipe Like Statistics')
+
+  // Create a navigate to page
+  const navigate = useNavigate()
+
+  // Function to handle the button click ===========
+  const handleLikeClick = () => {
+    // Go to the recipe statistics page
+    navigate('/ViewRecipeStats')
+  }
 
   // Create a usequery instance ===========================
   /* 
@@ -39,9 +53,9 @@ export function Blog() {
   const { status } = useSocket()
 
   return (
-    <div style={{ padding: 10 }}>
+    <div style={{ padding: 8 }}>
       <Helmet>
-        <title>The Recipe Blog Home Page</title>
+        <title>The Recipe Blog</title>
       </Helmet>
       <Header />
       <br />
@@ -58,7 +72,6 @@ export function Blog() {
         onChange={(value) => setAuthor(value)}
       />
       <br />
-      <hr />
       <RecipeSorting
         fields={['createdAt', 'updatedAt']}
         value={sortBy}
@@ -66,21 +79,24 @@ export function Blog() {
         orderValue={sortOrder}
         onOrderChange={(orderValue) => setSortOrder(orderValue)}
       />
+      <br />
+      <br />
+      <button onClick={handleLikeClick}> {likeStatText}</button>
+      <br />
       <hr />
-      <h2>Click on one of the recipes below to see more information.</h2>
       <div
         style={{
           maxHeight: '600px',
-          maxWidth: '800px',
+          maxWidth: '600px',
           overflowY: 'scroll',
           overflowX: 'scroll',
           border: '3px solid #ccc',
           padding: '50px',
         }}
       >
-        {' '}
         <RecipeList recipes={recipes} />
       </div>
+      <ViewRecipeStatsComp />
     </div>
   )
 }
